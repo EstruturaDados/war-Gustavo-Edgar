@@ -15,19 +15,31 @@
 // ============================================================================
 
 // Inclusão das bibliotecas padrão necessárias para entrada/saída, alocação de memória, manipulação de strings e tempo.
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 // --- Constantes Globais ---
 // Definem valores fixos para o número de territórios, missões e tamanho máximo de strings, facilitando a manutenção.
+#define N_territorios 3
 
 // --- Estrutura de Dados ---
 // Define a estrutura para um território, contendo seu nome, a cor do exército que o domina e o número de tropas.
-
+typedef struct{
+    char nome[30];
+    char cor[10];
+    int tropas;
+} war;
 // --- Protótipos das Funções ---
 // Declarações antecipadas de todas as funções que serão usadas no programa, organizadas por categoria.
 // Funções de setup e gerenciamento de memória:
 // Funções de interface com o usuário:
 // Funções de lógica principal do jogo:
 // Função utilitária:
+void LimparBufferEntrada(){
+    int c;
+    while((c = getchar()) != '\n' && c!= EOF);
+}
 
 // --- Função Principal (main) ---
 // Função principal que orquestra o fluxo do jogo, chamando as outras funções em ordem.
@@ -38,7 +50,32 @@ int main() {
     // - Aloca a memória para o mapa do mundo e verifica se a alocação foi bem-sucedida.
     // - Preenche os territórios com seus dados iniciais (tropas, donos, etc.).
     // - Define a cor do jogador e sorteia sua missão secreta.
+ war *Lista;
+    Lista = (war *) calloc(N_territorios, sizeof(war));
 
+    int i = 0;
+
+    for(i=0;i < N_territorios;i++){
+        printf("\n=== Cadastrando Territorio %d===\n", i+1);
+
+        printf("\nNome do Territorio: ");
+        fgets(Lista[i].nome, 30, stdin);
+        Lista[i].nome[strcspn(Lista[i].nome, "\n")] = '\0';
+
+        printf("\nCor do Exercito: ");
+        fgets(Lista[i].cor, 10 ,stdin);
+        Lista[i].cor[strcspn(Lista[i].cor, "\n")] = '\0';
+
+        printf("\nNumero de Tropas: ");
+        scanf("%d",&Lista[i].tropas);
+        
+        LimparBufferEntrada();
+    }
+    printf("\n       MAPA DO MUNDO      \n\n");
+    for(int ind=0;ind<N_territorios;ind++){
+        printf("%d. %s (Exercito %s, Tropas %d)\n",ind+1,Lista[ind].nome,Lista[ind].cor,Lista[ind].tropas);
+    }
+    free(Lista);
     // 2. Laço Principal do Jogo (Game Loop):
     // - Roda em um loop 'do-while' que continua até o jogador sair (opção 0) ou vencer.
     // - A cada iteração, exibe o mapa, a missão e o menu de ações.
